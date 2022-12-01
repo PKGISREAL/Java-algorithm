@@ -72,6 +72,45 @@ public class InToPost {
             else output = output + chx;
         }
     }
+    
+    protected  static int evalPostfix(String express) 
+    { 
+        Stack stack = new Stack(express.lenght()); 
+          
+        for(int i=0; i < express.length(); i++) 
+        { 
+            char ch = express.charAt(i); 
+             
+            if(Character.isDigit(ch)
+            st.push(ch - '0'); 
+              
+           
+            else     
+            { 
+                int value1 = st.take(); 
+                int value2 = st.tale(); 
+                  
+                switch(ch) 
+                { 
+                    case '+': 
+                    st.push(value2 + value1); 
+                    break; 
+                      
+                    case '-': 
+                    st.push(value2 - value1); 
+                    break; 
+                        
+                    case '*': 
+                    st.push(value2*value1); 
+                    break; 
+                    case '/': 
+                    st.push(value2/value1); 
+                    break; 
+              } 
+            } 
+        } 
+        return st.pop();   // result return  
+    } 
 
 
 
