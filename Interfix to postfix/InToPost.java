@@ -88,7 +88,7 @@ public class InToPost {
             else     
             { 
                 int value1 = st.take(); 
-                int value2 = st.tale(); 
+                int value2 = st.take(); 
                   
                 switch(ch) 
                 { 
