@@ -1,6 +1,5 @@
 package com.company;
 
-import java.nio.file.AccessMode;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -10,6 +9,29 @@ public class Int_to_postbruh {
     private Stack<String> stack = new Stack<>();
     int j = 0;
 
+
+    private static boolean isOperator(String c) {
+        return c.equals("+") || c.equals("-") || c.equals("*") || c.equals("/")
+                || c.equals("^") || c.equals("(")|| c.equals(")");
+    }
+    private static int getPrec(String op1) {
+        switch (op1)
+        {
+            case "+":
+            case "-":
+                return 1;
+
+            case "*":
+            case "/":
+                return 2;
+
+            case "^":
+                return 3;
+
+            default:
+                return -1;
+        }
+    }
 
     static String[] split(String com) {
         ArrayList<String> result = new ArrayList<>();
@@ -58,88 +80,41 @@ public class Int_to_postbruh {
         return result.toArray(new String[0]);
     }
 
-    public String[] int_to_post(String[] Amogus){
-        int size = Amogus.length;
-        this.input = new String[size];
-        for(int i = 0; i < Amogus.length; i++){
-            switch(Amogus[i]){
-                case "+":
-                case "-":
-                    gotOper(Amogus[i], 1);
-                    break;
-                case "*":
-                case "/":
-                    gotOper(Amogus[i], 2);
-                    break;
-                case "(":
-                    stack.push(Amogus[i]);
-                    break;
-                case ")":
-                    gotParen(Amogus[i]);
-                    break;
-                default:
-                    input[j] = Amogus[i];
-                    j++;
-                    break;
-            }
-        }
-        while(!stack.isEmpty())
-            input[j] = stack.pop();
+    public static String[] int_to_post(String[] infix)
+    {
+        Stack<String> stack = new Stack<>();
+        ArrayList<String> postfix = new ArrayList<>();
+        String temp;
 
+        for (String s : infix)
+        {
+            temp = s;
 
-        this.output = new String[j];
-
-        for(int i = 0; i < j ; i++){
-            output[i] = input[i];
-        }
-
-
-        return output;
-    }
-    public void gotOper(String opThis, int prior1){
-
-        while (!stack.isEmpty()){
-
-            String opTop = stack.pop();
-
-            if(opTop == "("){
-                stack.push(opTop);
-                break;
-            } else {
-                int prior2;
-                if (opTop == "+" || opTop == "-")
-                    prior2 = 1;
-                else
-                    prior2 = 2;
-                if (prior2 < prior1){
-                    stack.push(opTop);
-                    break;
+            if (!isOperator(temp)) {
+                postfix.add(temp);
+            } else if (temp.equals("(")) {
+                stack.push(temp);
+            } else if (temp.equals(")")) {
+                while (!stack.isEmpty() && !stack.peek().equals("(")) {
+                    postfix.add(stack.pop());
                 }
-                else {
-                    input[j] = opTop;
-                    j++;
+                if (!stack.isEmpty() && !stack.peek().equals("("))
+                    return null;
+                else if (!stack.isEmpty())
+                    stack.pop();
+            } else if (isOperator(temp)) {
+                if (!stack.isEmpty() && getPrec(temp) <= getPrec(stack.peek())) {
+                    postfix.add(stack.pop());
                 }
-
-            }
-
-        }
-        stack.push(opThis);
-    }
-    public void gotParen(String ch){
-
-        while (!stack.isEmpty()){
-
-            String chx = stack.pop();
-
-            char gob = chx.charAt(0);
-
-            if ( gob == '(')
-                break;
-            else{ input[j] = String.valueOf(gob);
-                  j++;
+                stack.push(temp);
             }
         }
+        while (!stack.isEmpty()) {
+            postfix.add(stack.pop());
+        }
+
+        return postfix.toArray(new String[0]);
     }
 
-
+    //Stackoverflow the best
 }
